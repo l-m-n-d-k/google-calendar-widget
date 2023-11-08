@@ -1,33 +1,35 @@
 import sys
-# Импортируем из PyQt5.QtWidgets классы для создания приложения и виджета
-import PyQt5.QtCore
-from PyQt5.QtWidgets import QApplication, QWidget
+from PyQt5.QtWidgets import QApplication, QWidget, QCalendarWidget, QHBoxLayout, QVBoxLayout, QLabel
 
 
-# Унаследуем наш класс от простейшего графического примитива QWidget
-class Example(QWidget):
-    def __init__(self):
-        # Надо не забыть вызвать инициализатор базового класса
+class TableManager(QWidget):
+    def __init__(self, user):
         super().__init__()
-        # В метод initUI() будем выносить всю настройку интерфейса,
-        # чтобы не перегружать инициализатор
+        self.user = user
+        self.setFixedSize(400, 300)
         self.initUI()
-        
 
     def initUI(self):
-        # Зададим размер и положение нашего виджета,
-        self.setGeometry(300, 300, 300, 300)
-        # А также его заголовок
-        self.setWindowTitle('Первая программа')
+        self.calendar_widget = QCalendarWidget(self)
+        main_layout = QHBoxLayout(self)
+        left_sidebar_layout = QVBoxLayout()
+        main_layout.addLayout(left_sidebar_layout)
+        left_sidebar_layout.addWidget(QLabel("Календарь"))
+        left_sidebar_layout.addWidget(self.calendar_widget)
+        self.calendar_widget.clicked.connect(self.show_day)
+
+    def show_day(self):
+        self.model.select()
+        self.query.exec(f"""SELECT * FROM {self.user} WHERE 
+        calendar_date = '{self.calendar_widget.selectedDate().toString("yyyy-MM-dd")}'
+        ORDER BY dateline ASC, deadline ASC""")
+        self.model.setQuery(self.query)
+        self.task_tableview.resizeColumnsToContents()
+        self.task_tableview.resizeRowsToContents()
 
 
 if __name__ == '__main__':
-    # Создадим класс приложения PyQT
     app = QApplication(sys.argv)
-    # А теперь создадим и покажем пользователю экземпляр
-    # нашего виджета класса Example
-    ex = Example()
+    ex = TableManager("user")
     ex.show()
-    # Будем ждать, пока пользователь не завершил исполнение QApplication,
-    # а потом завершим и нашу программу
-    sys.exit(app.exec())
+    sys.exit(app.exec_())
