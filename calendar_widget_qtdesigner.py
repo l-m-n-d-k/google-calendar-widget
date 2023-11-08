@@ -7,7 +7,12 @@ class CalendarWindow(QWidget):
         super().__init__()
         loadUi('calendar.ui', self)
         self.setFixedSize(840, 400)
+        self.calendarWidget.selectionChanged.connect(self.calendarDateChanged)
 
+    def calendarDateChanged(self):
+        dateSelected = self.calendarWidget.selectedDate().toPyDate()
+        print('Date selected:', dateSelected)
+        return dateSelected
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)

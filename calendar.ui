@@ -74,7 +74,7 @@ color:white;
 </string>
    </property>
    <property name="text">
-    <string>добавить задачу</string>
+    <string>добавить событие</string>
    </property>
   </widget>
   <widget class="QLineEdit" name="taskLineEdit">
