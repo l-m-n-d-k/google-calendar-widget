@@ -6,7 +6,7 @@ class TableManager(QWidget):
     def __init__(self, user):
         super().__init__()
         self.user = user
-        self.setFixedSize(400, 300)
+        self.setFixedSize(700, 500)
         self.initUI()
 
     def initUI(self):
