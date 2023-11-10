@@ -34,22 +34,29 @@ class GoogleCalendar:
             )
             .execute()
         )
-        return(events_result.get("items", []))
-
+        return events_result.get("items", [])
 
     # Добавление события
-    def add_event(self, calendar_id, summary, location=None, description=None, start_dateTime=None, end_dateTime=None):
+    def add_event(
+        self,
+        calendar_id,
+        summary,
+        location=None,
+        description=None,
+        start_dateTime=None,
+        end_dateTime=None,
+    ):
         event = {
             "summary": summary,
             "location": location,
             "description": description,
             "start": {
-                'dateTime': start_dateTime,
-                'timeZone': 'Europe/Moscow',
-            },  
+                "dateTime": start_dateTime,
+                "timeZone": "Europe/Moscow",
+            },
             "end": {
-                'dateTime': end_dateTime,
-                'timeZone': 'Europe/Moscow',
+                "dateTime": end_dateTime,
+                "timeZone": "Europe/Moscow",
             },
         }
 
@@ -61,22 +68,24 @@ class GoogleCalendar:
     def delete_evente(self, calendar_id, event_name):
         events_result = self.service.events().list(calendarId=calendar_id).execute()
         events = events_result.get("items", [])
-        print(events)
+        # print(events)
 
         # Поиск события по названию
         for event in events:
-            if event.get('summary') == event_name:
+            if event.get("summary") == event_name:
                 # Удаление найденного события
-                self.service.events().delete(calendarId=calendar_id, eventId=event['id']).execute()
-                print(f'Событие "{event_name}" успешно удалено')
+                self.service.events().delete(
+                    calendarId=calendar_id, eventId=event["id"]
+                ).execute()
+                # print(f'Событие "{event_name}" успешно удалено')
                 return
-            print(f'Событие "{event_name}" не найдено')
+            # print(f'Событие "{event_name}" не найдено')
 
 
-obj = GoogleCalendar()
+# obj = GoogleCalendar()
 
-calendar_id = "dima2642007@gmail.com"
+# calendar_id = "dima2642007@gmail.com"
 
-events = obj.get_event_by_date(calendar_id, '2023-11-10')
-for event in events:
-    print(event["summary"], event["start"], event["end"])
+# events = obj.get_event_by_date(calendar_id, "2023-11-10")
+# for event in events:
+#     print(event["summary"], event["start"], event["end"])
