@@ -82,10 +82,13 @@ class GoogleCalendar:
             # print(f'Событие "{event_name}" не найдено')
 
 
-# obj = GoogleCalendar()
+"""
 
-# calendar_id = "dima2642007@gmail.com"
+obj = GoogleCalendar()
 
-# events = obj.get_event_by_date(calendar_id, "2023-11-10")
-# for event in events:
-#     print(event["summary"], event["start"], event["end"])
+calendar_id = "dima2642007@gmail.com"
+
+events = obj.get_event_by_date(calendar_id, "2023-11-10")
+for event in events:
+    print(event["summary"], event["start"], event["end"])
+"""
