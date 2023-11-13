@@ -31,14 +31,14 @@ class CalendarWindow(QWidget, Ui_Calendar):
         self.move(widgetGeometry.topLeft())
 
     def calendarDateChanged(self):
-        self.dateSelected = self.calendarWidget.selectedDate().toPyDate()
+        dateSelected = self.calendarWidget.selectedDate().toPyDate()
         event_list = google_calendar.get_event_by_date(
-            calendar_id, str(self.dateSelected))
+            calendar_id, str(dateSelected))
         events = []
         for event in event_list:
             events.append(event["summary"])
         self.updateEventList(events)
-        # return str(dateSelected)
+        return str(dateSelected)
 
     def updateEventList(self, events):
         self.eventList.clear()
@@ -64,9 +64,9 @@ class CalendarWindow(QWidget, Ui_Calendar):
 
     def addNewEvente(self):
         newTask = str(self.eventLine.text())
-        date = str(self.dateSelected)
+        date = self.calendarDateChanged()
         google_calendar.add_event(
-            calendar_id, newTask, date, date)
+            calendar_id, newTask, None, None, date, date)
 
         self.calendarDateChanged()
 

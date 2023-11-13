@@ -41,34 +41,30 @@ class GoogleCalendar:
         self,
         calendar_id,
         summary,
-        location=None,
-        description=None,
-        start_dateTime=None,
-        end_dateTime=None,
+        start_date,
+        end_date,
     ):
         event = {
             "summary": summary,
-            "location": location,
-            "description": description,
             "start": {
-                "dateTime": start_dateTime,
+                "date": start_date,
                 "timeZone": "Europe/Moscow",
             },
             "end": {
-                "dateTime": end_dateTime,
+                "date": end_date,
                 "timeZone": "Europe/Moscow",
             },
         }
 
         return (
-            self.service.events().insert(calendarId=calendar_id, body=event).execute()
+            self.service.events().insert(
+                calendarId=calendar_id, body=event).execute()
         )
 
     # Удаление события
     def delete_evente(self, calendar_id, event_name):
         events_result = self.service.events().list(calendarId=calendar_id).execute()
         events = events_result.get("items", [])
-        # print(events)
 
         # Поиск события по названию
         for event in events:
@@ -77,18 +73,4 @@ class GoogleCalendar:
                 self.service.events().delete(
                     calendarId=calendar_id, eventId=event["id"]
                 ).execute()
-                # print(f'Событие "{event_name}" успешно удалено')
                 return
-            # print(f'Событие "{event_name}" не найдено')
-
-
-"""
-
-obj = GoogleCalendar()
-
-calendar_id = "dima2642007@gmail.com"
-
-events = obj.get_event_by_date(calendar_id, "2023-11-10")
-for event in events:
-    print(event["summary"], event["start"], event["end"])
-"""
