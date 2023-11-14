@@ -36,41 +36,53 @@ class GoogleCalendar:
         )
         return events_result.get("items", [])
 
-    # Добавление события
+    # Добавление события без времени
     def add_event(
         self,
         calendar_id,
         summary,
-        start_date,
-        end_date,
+        date,
     ):
+        date = date[:-1] + str(int(date[-1]) + 1)
         event = {
             "summary": summary,
             "start": {
-                "date": start_date,
-                "timeZone": "Europe/Moscow",
+                "date": date,
             },
             "end": {
-                "date": end_date,
-                "timeZone": "Europe/Moscow",
+                "date": date,
             },
         }
 
         return (
-            self.service.events().insert(
-                calendarId=calendar_id, body=event).execute()
+            self.service.events().insert(calendarId=calendar_id, body=event).execute()
+        )
+
+    # добавление события и его времини
+    def add_event_with_time(
+        self,
+        calendar_id,
+        summary,
+        start_time,
+        end_time,
+    ):
+        event = {
+            "summary": summary,
+            "start": {"dateTime": start_time, "timeZone": "Europe/Moscow"},
+            "end": {"dateTime": end_time, "timeZone": "Europe/Moscow"},
+        }
+
+        return (
+            self.service.events().insert(calendarId=calendar_id, body=event).execute()
         )
 
     # Удаление события
-    def delete_evente(self, calendar_id, event_name):
-        events_result = self.service.events().list(calendarId=calendar_id).execute()
-        events = events_result.get("items", [])
-
-        # Поиск события по названию
+    def delete_event(self, calendar_id, event_name, date):
+        events = self.get_event_by_date(calendar_id, date)
         for event in events:
-            if event.get("summary") == event_name:
-                # Удаление найденного события
+            if event["summary"] == event_name:
                 self.service.events().delete(
                     calendarId=calendar_id, eventId=event["id"]
                 ).execute()
-                return
+                return True
+        return False
